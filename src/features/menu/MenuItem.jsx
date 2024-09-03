@@ -1,19 +1,36 @@
 import { useDispatch, useSelector } from 'react-redux';
 import Button from '../../ui/Button';
 import { formatCurrency } from '../../utilities/helpers';
-import { addItem, increaseItemQuantity } from '../cart/cartSlice';
+import { addItem, getCart, getCurrentQuantityById } from '../cart/cartSlice';
+import DeleteItem from '../cart/DeleteItem';
+import UpdateItemQuantity from '../cart/UpdateItemQuantity';
 
 function MenuItem({ pizza }) {
-  const { id, name, unitPrice, ingredients, soldOut, imageUrl } = pizza;
   const dispatch = useDispatch();
-  const cart = useSelector((state) => state.cart.cart);
+
+  const { id, name, unitPrice, ingredients, soldOut, imageUrl } = pizza;
+  const cart = useSelector(getCart);
+  const isInCart = cart.some((item) => item.pizzaId === id);
+
+  const currentQuantity = useSelector(getCurrentQuantityById(id));
 
   function handleAddToCart() {
     if (soldOut) return;
 
-    if (cart.some((item) => item.pizzaId === id))
-      return dispatch(increaseItemQuantity(id));
+    /**
+     * Checks if the current pizza is already in the cart, and if so, increases the quantity of the existing item instead of adding a new one.
+     */
+    // if (cart.some((item) => item.pizzaId === id))
+    //   return dispatch(increaseItemQuantity(id));
 
+    /**
+     * Creates a new item object with the specified properties and adds it to the cart.
+     *
+     * @param {string} name - The name of the pizza item.
+     * @param {string} id - The unique identifier of the pizza item.
+     * @param {number} unitPrice - The price of the pizza item.
+     * @returns {void}
+     */
     const newItem = {
       name,
       pizzaId: id,
@@ -45,7 +62,17 @@ function MenuItem({ pizza }) {
             </p>
           )}
 
-          {!soldOut && (
+          {isInCart && (
+            <div className='flex items-center gap-3 sm:gap-8'>
+              <UpdateItemQuantity
+                pizzaId={id}
+                currentQuantity={currentQuantity}
+              />{' '}
+              <DeleteItem pizzaId={id} />{' '}
+            </div>
+          )}
+
+          {!soldOut && !isInCart && (
             <Button type='small' onClick={handleAddToCart}>
               Add to Cart
             </Button>
