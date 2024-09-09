@@ -4,12 +4,18 @@ This React app is a comprehensive demonstration of various React concepts and be
 
 ## Features
 
-- [List key features of the app]
+- Siple login by addin Name
+- Choose your Pizza
+- See Cart
+- Order with or whitout priority
+- Get Address with on click
 
 ## Technologies Used
 
 - React
-- [Other libraries or frameworks used]
+- React-router
+- Redux-Toolkit
+- Tailwind
 
 ## Getting Started
 
