@@ -9,6 +9,7 @@ import {
   formatDate,
 } from '../../utilities/helpers';
 import { useEffect } from 'react';
+import UpdateOrder from './updateOrder';
 
 function Order() {
   // Everyone can search for all orders, so for privacy reasons we're gonna exclude names or address, these are only for the restaurant staff
@@ -90,13 +91,23 @@ function Order() {
           To pay on delivery: {formatCurrency(orderPrice + priorityPrice)}
         </p>
       </div>
+
+      <UpdateOrder />
     </div>
   );
 }
 
+export default Order;
+
+/**
+ * Loader function for the order page.
+ * Fetches the order data for the specified order ID.
+ *
+ * @param {Object} params - The parameters object.
+ * @param {string} params.orderId - The ID of the order to fetch.
+ * @returns {Promise<Object>} The order data.
+ */
 export async function orderLoader({ params }) {
   const order = await getOrder(params.orderId);
   return order;
 }
-
-export default Order;
